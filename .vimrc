@@ -1,13 +1,13 @@
 " Plugin section
 call plug#begin('~/.vim/plugged')
 
-" Autoclosing brackets etc.
-Plug 'https://github.com/vim-scripts/AutoClose.git'
+Plug 'https://github.com/bling/vim-bufferline.git'
+Plug 'chun-yang/auto-pairs'
 
 call plug#end() 
 
 " Set section
-set number
+set rnu
 set noswapfile
 set ruler
 set ai
@@ -21,14 +21,27 @@ set background=dark
 set t_Co=256 
 set ttimeoutlen=100
 
+" Statusline
+set laststatus=2
+let g:bufferline_inactive_highlight = 'StatusLineNC'
+let g:bufferline_active_highlight = 'StatusLine'
+let g:bufferline_echo = 0
+autocmd VimEnter *
+    \ let &statusline='%{bufferline#refresh_status()}'
+      \ .bufferline#get_status_string()
+
+
 " Theme settings
 packadd! dracula
 syntax enable
-colorscheme dracula
+colorscheme dracula 
+set cursorline
 
-"inoremap { {<CR>}<Esc>ko
-"inoremap ( ()<Esc>i
-"inoremap < <><Esc>i
+
+" Remaps
+nnoremap <C-l> :bn!<CR>
+nnoremap <C-h> :bp!<CR>
+nnoremap <C-d> :sh<CR>
 
 " WSL yank support
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
@@ -37,6 +50,4 @@ if executable(s:clip)
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
     augroup END
-endif
-
-
+endif 
